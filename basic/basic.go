@@ -1,5 +1,7 @@
 package basic
 
+import "fmt"
+
 func Basic() {
 	declare()
 }
@@ -56,4 +58,26 @@ func declare() {
 		简短变量声明被广泛用于大部分的局部变量的声明和初始化。
 		var 形式的声明语句往往是用于需要显式指定变量类型地方，或者因为变量稍后会被重新赋值而初始值无关紧要的地方。
 	*/
+
+	/*
+		微软的 VC 编译器会将未初始化的栈空间以 16 进制的 0xCC 填充，而未初始化的堆空间使用 0xCD 填充，
+		而 0xCCCC 和 0xCDCD 在中文的 GB2312 编码中刚好对应“烫”和“屯”字。
+		因此，如果一个字符串没有结束符\0，直接输出的内存数据转换为字符串就刚好对应“烫烫烫”和“屯屯屯”。
+
+		初始化
+		var 变量名 类型 = 表达式
+		var hp int = 100
+
+		将 int 省略后，编译器会尝试根据等号右边的表达式推导 hp 变量的类型。
+		var hp = 100
+		等号右边的部分在编译原理里被称做右值（rvalue）。
+
+		由于Go语言和C语言一样，编译器会尽量提高精确度，以避免计算中的精度损失。
+		Go语言编译器会将小数推导为 float64
+	*/
+	var attack = 40
+	var defence = 20
+	var damageRate float32 = 0.17
+	var damage = float32(attack-defence) * damageRate
+	fmt.Println(damage)
 }
