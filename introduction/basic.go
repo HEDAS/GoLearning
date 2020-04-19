@@ -565,6 +565,15 @@ func dependence() {
 	godep version	查看版本信息
 
 	使用godep help [命令名称]可以查看命令的帮助信息
+
+	执行godep save 命令，会在当前目录中创建 Godeps 和 vender 两个文件夹。
+	Godeps 文件夹下会生成一个 Godeps.json 文件，用来记录项目中所依赖的包信息；
+	vender 目录则是用来保存当前项目所依赖的所有第三方包。
+
+	其中，“ImportPath”为项目的路径信息，
+	“GoVersion”为Go语言的版本号，“GodepVersion”为 godep 工具的版本号，“Deps”为当前依赖包的路径、版本号信息等等。
+
+	提示：当引用的第三方包要升级时，只需要修改 Godep.json 里面的依赖包的版本号，然后再次执行 godep save 命令即可。
 	 */
 }
 
