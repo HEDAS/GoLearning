@@ -18,6 +18,8 @@ func Basic() {
 	compiler()
 	install()
 	structure()
+	dependence()
+	helloworld()
 }
 
 func introduction() {
@@ -540,41 +542,155 @@ func structure() {
 
 func dependence() {
 	/*
-	godep 是一个Go语言官方提供的通过 vender 模式来管理第三方依赖的工具，类似的还有由社区维护的准官方包管理工具 dep。
+		godep 是一个Go语言官方提供的通过 vender 模式来管理第三方依赖的工具，类似的还有由社区维护的准官方包管理工具 dep。
 
-	安装godep工具
-	我们可以通过go get 命令来获取 godep 工具。
-	go get github.com/tools/godep
+		安装godep工具
+		我们可以通过go get 命令来获取 godep 工具。
+		go get github.com/tools/godep
 
-	命令执行成功后会将 godep 工具的源码下载到 D:\GOPATH\pkg\mod\github.com\tools 的 src 目录下对应的文件夹中，
-	同时还会在 GOPATH 的 bin 目录下生成一个名为 godep.exe 的可执行文件，如下图所示。
+		命令执行成功后会将 godep 工具的源码下载到 D:\GOPATH\pkg\mod\github.com\tools 的 src 目录下对应的文件夹中，
+		同时还会在 GOPATH 的 bin 目录下生成一个名为 godep.exe 的可执行文件，如下图所示。
 
-	为了方便使用 godep 工具，我们需要将存放 godep.exe 文件的目录添加到环境变量 PATH 中。
+		为了方便使用 godep 工具，我们需要将存放 godep.exe 文件的目录添加到环境变量 PATH 中。
 
-	godep工具的基本命令
-	完成上面的操作后，我们就可以在命令行窗口（CMD）中使用 godep 工具了，godep 支持的命令如下表所示：
+		godep工具的基本命令
+		完成上面的操作后，我们就可以在命令行窗口（CMD）中使用 godep 工具了，godep 支持的命令如下表所示：
 
-	命令	作用
-	godep save	将依赖包的信息保存到 Godeps.json 文件中
-	godep go	使用保存的依赖项运行 go 工具
-	godep get	下载并安装指定的包
-	godep path	打印依赖的 GOPATH 路径
-	godep restore	在 GOPATH 中拉取依赖的版本
-	godep update	更新选定的包或 go 版本
-	godep diff	显示当前和以前保存的依赖项集之间的差异
-	godep version	查看版本信息
+		命令	作用
+		godep save	将依赖包的信息保存到 Godeps.json 文件中
+		godep go	使用保存的依赖项运行 go 工具
+		godep get	下载并安装指定的包
+		godep path	打印依赖的 GOPATH 路径
+		godep restore	在 GOPATH 中拉取依赖的版本
+		godep update	更新选定的包或 go 版本
+		godep diff	显示当前和以前保存的依赖项集之间的差异
+		godep version	查看版本信息
 
-	使用godep help [命令名称]可以查看命令的帮助信息
+		使用godep help [命令名称]可以查看命令的帮助信息
 
-	执行godep save 命令，会在当前目录中创建 Godeps 和 vender 两个文件夹。
-	Godeps 文件夹下会生成一个 Godeps.json 文件，用来记录项目中所依赖的包信息；
-	vender 目录则是用来保存当前项目所依赖的所有第三方包。
+		执行godep save 命令，会在当前目录中创建 Godeps 和 vender 两个文件夹。
+		Godeps 文件夹下会生成一个 Godeps.json 文件，用来记录项目中所依赖的包信息；
+		vender 目录则是用来保存当前项目所依赖的所有第三方包。
 
-	其中，“ImportPath”为项目的路径信息，
-	“GoVersion”为Go语言的版本号，“GodepVersion”为 godep 工具的版本号，“Deps”为当前依赖包的路径、版本号信息等等。
+		其中，“ImportPath”为项目的路径信息，
+		“GoVersion”为Go语言的版本号，“GodepVersion”为 godep 工具的版本号，“Deps”为当前依赖包的路径、版本号信息等等。
 
-	提示：当引用的第三方包要升级时，只需要修改 Godep.json 里面的依赖包的版本号，然后再次执行 godep save 命令即可。
-	 */
+		提示：当引用的第三方包要升级时，只需要修改 Godep.json 里面的依赖包的版本号，然后再次执行 godep save 命令即可。
+
+		godep 工具的主要功能就是控制Go语言程序编译时依赖包搜索路径的优先级。
+		例如查找项目的某个依赖包，首先会在项目根目录下的 vender 文件夹中查找，如果没有找到就会去 GOAPTH/src 目录下查找。
+
+		go module
+		go module 是Go语言从 1.11 版本之后官方推出的版本管理工具，
+		并且从 Go1.13 版本开始，go module 成为了Go语言默认的依赖管理工具。
+
+		GO111MODULE
+		在Go语言 1.12 版本之前，要启用 go module 工具首先要设置环境变量 GO111MODULE，
+		不过在Go语言 1.13 及以后的版本则不再需要设置环境变量。通过 GO111MODULE 可以开启或关闭 go module 工具。
+		GO111MODULE=off 禁用 go module，编译时会从 GOPATH 和 vendor 文件夹中查找包。
+		GO111MODULE=on 启用 go module，编译时会忽略 GOPATH 和 vendor 文件夹，只根据 go.mod 下载依赖。
+		GO111MODULE=auto（默认值），当项目在 GOPATH/src 目录之外，并且项目根目录有 go.mod 文件时，开启 go module。
+
+		Windows 下开启 GO111MODULE 的命令为：
+		set GO111MODULE=on 或者 set GO111MODULE=auto
+
+		MacOS 或者 Linux 下开启 GO111MODULE 的命令为：
+		export GO111MODULE=on 或者 export GO111MODULE=auto
+
+		在开启 GO111MODULE 之后就可以使用 go module 工具了，
+		也就是说在以后的开发中就没有必要在 GOPATH 中创建项目了，并且还能够很好的管理项目依赖的第三方包信息。
+
+		使用 go module 的go mod init 命令后会在当前目录下生成一个 go. mod 文件，
+		并且在编译/运行当前目录下代码或者使用go get 命令的时候会在当前目录下生成一个 go.sun 文件。
+
+		其中，module 为 go.mod 文件所属的包，require 为项目所依赖的包及版本号，indirect 表示间接引用。
+
+		go.sum 文件则是用来记录每个依赖包的版本及哈希值，如下所示。
+
+		常用的 go mod 命令如下表所示：
+
+		命令	作用
+		go mod download	下载依赖包到本地（默认为 GOPATH/pkg/mod 目录）
+		go mod edit	编辑 go.mod 文件
+		go mod graph	打印模块依赖图
+		go mod init	初始化当前文件夹，创建 go.mod 文件
+		go mod tidy	增加缺少的包，删除无用的包
+		go mod vendor	将依赖复制到 vendor 目录下
+		go mod verify	校验依赖
+		go mod why	解释为什么需要依赖
+
+		GOPROXY
+		proxy 顾名思义就是代理服务器的意思。
+		大家都知道，国内的网络有防火墙的存在，这导致有些Go语言的第三方包我们无法直接通过go get 命令获取。
+		GOPROXY 是Go语言官方提供的一种通过中间代理商来为用户提供包下载服务的方式。
+		要使用 GOPROXY 只需要设置环境变量 GOPROXY 即可。
+
+		目前公开的代理服务器的地址有：
+		goproxy.io
+		goproxy.cn：（推荐）由国内的七牛云提供。
+
+		Windows 下设置 GOPROXY 的命令为：
+		go env -w GOPROXY=https://goproxy.cn,direct
+
+		MacOS 或 Linux 下设置 GOPROXY 的命令为：
+		export GOPROXY=https://goproxy.cn
+
+		Go语言在 1.13 版本之后 GOPROXY 默认值为 https://proxy.golang.org，
+		在国内可能会存在下载慢或者无法访问的情况，所以十分建议大家将 GOPROXY 设置为国内的 goproxy.cn。
+
+		使用go get命令下载指定版本的依赖包
+		执行go get 命令，在下载依赖包的同时还可以指定依赖包的版本。
+		运行go get -u命令会将项目中的包升级到最新的次要版本或者修订版本；
+		运行go get -u=patch命令会将项目中的包升级到最新的修订版本；
+		运行go get [包名]@[版本号]命令会下载对应包的指定版本或者将对应包升级到指定的版本。
+		提示：go get [包名]@[版本号]命令中版本号可以是 x.y.z 的形式，
+		例如 go get foo@v1.2.3，也可以是 git 上的分支或 tag，
+		例如 go get foo@master，还可以是 git 提交时的哈希值，例如 go get foo@e3702bed2。
+	*/
+}
+
+func helloworld() {
+	fmt.Println("Hello, world!") // 注意，Println 函数打印完成后会自动换行，ln是 line 的缩写。
+	/*
+		Go语言的包与文件夹是一一对应的，它具有以下几点特性：
+		一个目录下的同级文件属于同一个包。
+		包名可以与其目录名不同。
+		main 包是Go语言程序的入口包，一个Go语言程序必须有且仅有一个 main 包。
+		如果一个程序没有 main 包，那么编译时将会出错，无法生成可执行文件。
+
+		main 函数是自定义函数的一种，在Go语言中，所有函数都以关键字 func 开头的，定义格式如下所示：
+		func 函数名 (参数列表) (返回值列表){
+		    函数体
+		}
+
+		函数名：由字母、数字、下画线_组成，其中，函数名的第一个字母不能为数字，并且，在同一个包内，函数名称不能重名。
+		参数列表：一个参数由参数变量和参数类型组成，例如func foo( a int, b string )。
+		返回值列表：可以是返回值类型列表，也可以是参数列表那样变量名与类型的组合，函数有返回值时，必须在函数体中使用 return 语句返回。
+		函数体：能够被重复调用的代码片段。
+	*/
+
+	/*
+		使用 go build 命令进行编译时，不同参数的执行结果也是不同的。
+		1) 当参数不为空时
+		如果 fileName 为同一 main 包下的所有源文件名（可能有一个或者多个），
+		编译器将生成一个与第一个 fileName 同名的可执行文件（如执行go build abc.go def.go ...会生成一个 abc.exe 文件）；
+		如果 fileName 为非 main 包下的源文件名，编译器将只对该包进行语法检查，不生成可执行文件。
+
+		2) 当参数为空时
+		如果当前目录下存在 main 包，则会生成一个与当前目录名同名的“目录名.exe”可执行文件
+		（如在 hello 目录中执行go build命令时，会生成 hello.exe 文件）；
+		如果不存在 main 包，则只对当前目录下的程序源码进行语法检查，不会生成可执行文件。
+	*/
+
+	/*
+		Golang设置
+		上图中有以下几点需要注意：
+		名称：为本条配置信息的名称，可以自定义，也可以使用系统默认的值；
+		Run kind：这里需要设置为“Directory”；
+		Directory：用来设置 main 包所在的目录，不能为空；
+		Output directory：用来设置编译后生成的可执行文件的存放目录，可以为空，为空时默认不生成可执行文件；
+		Working directory：用来设置程序的运行目录，可以与“Directory”的设置相同，但是不能为空。
+	*/
 }
 
 // 生产者与消费者
@@ -598,6 +714,7 @@ func producer(header string, channel chan<- string) {
 		time.Sleep(time.Second)
 	}
 }
+
 
 // 数据消费者
 func customer(channel <-chan string) {
