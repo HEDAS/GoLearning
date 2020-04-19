@@ -1,0 +1,11 @@
+{
+	"ImportPath": ".",
+	"GoVersion": "go1.14",
+	"GodepVersion": "v80",
+	"Deps": [
+		{
+			"ImportPath": "GoLearning/introduction",
+			"Rev": "33fa50eb8562c4e77f4163cdcf84aa20a7db49e2"
+		}
+	]
+}
